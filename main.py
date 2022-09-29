@@ -16,6 +16,7 @@ from wordpress_xmlrpc import WordPressPost
 
 options = Options()
 options.add_argument("start-maximized")
+options.add_argument("window-size=1920,1080")
 options.add_argument("--no-sandbox")
 options.add_argument("--disable-gpu")
 options.add_argument("--headless")
@@ -64,7 +65,7 @@ while bot:
     #  Fuel
 
     try:
-        botaofu = driver.find_element(By.XPATH, '/html/body/div[9]/div/div[4]/div[3]/div/img')
+        botaofu = driver.find_element(By.XPATH, '/html/body/div[9]/div/div[4]/div[3]/div')
         time.sleep(15)
         print('achou o botao de combustivel')
         botaofu.click()
