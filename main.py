@@ -64,7 +64,7 @@ while bot:
     #  Fuel
 
     try:
-        botaofu = driver.find_element(By.ID, 'mapMaint')
+        botaofu = driver.find_element(By.XPATH, '/html/body/div[9]/div/div[4]/div[3]/div')
         time.sleep(15)
         print('achou o botao de combustivel')
         botaofu.click()
