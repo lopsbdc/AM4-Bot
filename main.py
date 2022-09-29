@@ -1,11 +1,9 @@
 import os
-from selenium.common.exceptions import *
 from selenium import webdriver
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.chrome.service import Service as ChromeService
-from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
 import time
 import logging
 import requests
@@ -16,30 +14,11 @@ from wordpress_xmlrpc import WordPressPost
 
 #comandinhos pra startar o chrome
 
-def iniciar_drive():
-    chrome_options = Options()
-
-    arguments = [' --lang=en-US', 'window-size=1920,1080', '--incognito', '--disable-gpu', '--no-sandbox', '--headless']
-
-    for argument in arguments:
-        chrome_options.add_argument(argument)
-
-    chrome_options.binary_location = os.environ.get('GOOGLE_CHROME_BIN')
-    driver_path = os.environ.get('CHROMEDRIVER_PATH')
-
-    driver = webdriver.Chrome(executable_path=driver_path, options=chrome_options)
-
-    wait = WebDriverWait(
-        driver,
-        10,
-        poll_frequency=1,
-        ignore_exceptions=[
-            NoSuchElementException,
-            ElementNotVisibleException,
-            ElementNotSelectableException,
-        ]
-    )
-    return driver, wait
+options = Options()
+options.add_argument("start-maximized")
+options.add_argument("--no-sandbox")
+options.add_argument("--disable-gpu")
+options.add_argument("--headless")
 
 #  Telegram
 
@@ -60,7 +39,7 @@ while bot:
     fuel = 'null'
     co2 = 'null'
 
-    driver, wait = iniciar_drive()
+    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
 
     #  Logando
     driver.get('https://www.airlinemanager.com/')
