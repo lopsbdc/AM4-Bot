@@ -59,7 +59,7 @@ while bot:
     login = driver.find_element(By.XPATH, '//*[@id="btnLogin"]')
     login.click()
     print('fez o login')
-    time.sleep(300)
+    time.sleep(16)
 
     #  Fuel
 
