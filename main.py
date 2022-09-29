@@ -43,17 +43,22 @@ while bot:
 
     #  Logando
     driver.get('https://www.airlinemanager.com/')
+    print('entrou no site')
     menu = driver.find_element(By.XPATH, '/html/body/div[4]/div/div[2]/div[1]/div/button[2]')
     menu.click()
     time.sleep(15)
+    print('clicou no login')
     email = driver.find_element(By.XPATH, '//*[@id="lEmail"]')
     email.send_keys(cred.cred1)
     time.sleep(8)
+    print('colocou o email')
     senha = driver.find_element(By.XPATH, '//*[@id="lPass"]')
     senha.send_keys(cred.cred2)
     time.sleep(8)
+    print('colocou a senha')
     login = driver.find_element(By.XPATH, '//*[@id="btnLogin"]')
     login.click()
+    print('fez o login')
     time.sleep(16)
 
     #  Fuel
@@ -61,6 +66,7 @@ while bot:
     try:
         botaofu = driver.find_element(By.ID, 'mapMaint')
         time.sleep(15)
+        print('achou o botao de combustivel')
         botaofu.click()
         time.sleep(15)
 
