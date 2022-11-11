@@ -1,6 +1,6 @@
-token = '5772282041:AAELVrriYZ80BTP30V_vIjJGRhevHhK3S58'
+token = 'myToken'
 
-cred1 = 'botam4@hotmail.com'
-cred2 = 'Ys5qAaTReTLJa7F'
-cred3 = 'botam4@hotmail.com'
-cred4 = '163193915Mh?'
+cred1 = 'email'
+cred2 = 'pass'
+cred3 = 'email2'
+cred4 = 'pass2'
