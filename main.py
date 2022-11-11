@@ -12,7 +12,7 @@ from wordpress_xmlrpc import Client
 from wordpress_xmlrpc.methods import posts
 from wordpress_xmlrpc import WordPressPost
 
-#comandinhos pra startar o chrome
+#comandos para startar o chrome, evitar erros de scraping
 
 options = Options()
 options.add_argument("start-maximized")
@@ -25,62 +25,61 @@ options.add_argument("--headless")
 
 token = cred.token
 
+# Função de envio de mensagem
+
 def enviar_mensagem(chat_id, text, disable_notification=False):
     data = requests.get(
         f'https://api.telegram.org/bot{token}/sendMessage?chat_id={chat_id}&text={text}&disable_notifications={disable_notification}')
     #print(data.json())
 
-#  Fim Telegram
-
 
 bot = 2
+
+# Inicio do Loop
 
 while bot:
 
     fuel = 'null'
     co2 = 'null'
-
+    
+    # Abrir o Chrome
     driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
 
-    #  Logando
+    #  Logando no site, e clicando nos botões. Sleep para garantir que a pagina vai carregar a tempo
     driver.get('https://www.airlinemanager.com/')
-    print('entrou no site')
     menu = driver.find_element(By.XPATH, '/html/body/div[4]/div/div[2]/div[1]/div/button[2]')
     menu.click()
     time.sleep(15)
-    print('clicou no login')
     email = driver.find_element(By.XPATH, '//*[@id="lEmail"]')
     email.send_keys(cred.cred1)
     time.sleep(8)
-    print('colocou o email')
     senha = driver.find_element(By.XPATH, '//*[@id="lPass"]')
     senha.send_keys(cred.cred2)
     time.sleep(8)
-    print('colocou a senha')
     login = driver.find_element(By.XPATH, '//*[@id="btnLogin"]')
     login.click()
-    print('fez o login')
     time.sleep(16)
 
-    #  Fuel
+    #  Depois de logar, inicio da pesquisa de Fuel
 
     try:
         botaofu = driver.find_element(By.XPATH, '/html/body/div[9]/div/div[4]/div[3]/div')
         time.sleep(15)
-        print('achou o botao de combustivel')
         botaofu.click()
         time.sleep(15)
 
         fu = driver.find_element(By.XPATH, '//*[@id="fuelMain"]/div/div[1]/span[2]/b').text
+        # Tratando dados
         fuele = fu.replace("$ ", "")
         fuelee = fuele.replace(",", "")
         fuel = int(fuelee)
+        # Aviso do log
         logging.warning('Preço do combustível obtido com sucesso!')
 
     except:
         logging.warning('Erro ao obter preço do combustível')
 
-       #  CO2
+       #  Inicio da pesquisa de CO2
 
     try:
         time.sleep(12)
@@ -88,9 +87,11 @@ while bot:
         botaoco.click()
         time.sleep(15)
         co = driver.find_element(By.XPATH, '//*[@id="co2Main"]/div/div[2]/span[2]/b').text
+        # Tratando dados
         co2e = co.replace("$ ", "")
         co2ee = co2e.replace(",", "")
         co2 = int(co2ee)
+        # Aviso do log
         logging.warning('Preço do CO2 obtido com sucesso!')
         driver.quit()
 
@@ -100,12 +101,12 @@ while bot:
 
 
 
-    #  Hora dos avisos
+    #  Hora dos avisos: Telegram + Wordpress
 
 
     if fuel < 1000 or co2 < 150:
 
-        # Telegram
+        # Postar no Telegram
 
         try:
             texto = (f'Preço do combustível: $ {fuel}, e do CO2: $ {co2}.')
@@ -115,13 +116,13 @@ while bot:
         except:
             logging.warning('Erro ao postar no telegram')
 
-        #  Wordpress
+        #  Postar no Wordpress
 
         try:
             TITULO = 'Atualização de preço'
             TEXTO = (f'Preço do combustível: $ {fuel}, e do CO2: $ {co2}.')
 
-            your_blog = Client('https://www.mafiabrasil.com/xmlrpc.php', cred.cred3, cred.cred4)
+            your_blog = Client('Site do Cliente', cred.cred3, cred.cred4)
 
             myposts = your_blog.call(posts.GetPosts())
 
@@ -136,15 +137,17 @@ while bot:
 
         except:
             logging.warning('Erro ao postar no wordpress')
-
+    
+    # Tratando erros
     elif fuel == 'null' or co2 == 'null':
         driver.quit()
-
+    
+    # Aguardando próximo atualização
     else:
         logging.warning('valores ainda estão muito altos')
 
 
     #  Refresh do bot
-    logging.warning('Bot fará uma nova busca em 10 segundos')
-    time.sleep(10)
+    logging.warning('Bot fará uma nova busca em 30 minutos')
+    time.sleep(1800)
 
