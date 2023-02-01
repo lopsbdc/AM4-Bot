@@ -1,5 +1,5 @@
 # AM4-Bot
-Bot VintePila - Airline Manager 4
+Bot - Airline Manager 4
 
 Este é um bot para pesquisar preços de Combustivel e CO2 do jogo Airline Manager 4. 
 
